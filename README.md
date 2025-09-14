@@ -6,18 +6,18 @@
 2. Каждую секунду человек рандомно перемещается по x на 1, 0 или -1 (вверх/остается на месте/вниз) по y на 1, 0 или -1 (вперед/остается на месте/назад)
 3. По указаному направлению он перемещается по заранее заданой скорости например если направления 1,1 и скорость 2 то он переместится по каждой коориднате на 2.
 
-    class Human
-    {
-        ..
-        var cur_speed: Int = 1 (значение по умолчанию)
-        var x = 0
-        var y = 0
-        ..
-        
-        fun moveTo(_toX: Int, _toY: Int)
+        class Human
         {
-            x  += _toX * cur_speed
-            y += _toY * cur_speed
-            println("Human $name is moved on x + $_toX y + $_toY TO: $x, $y" z)
+            ..
+            var cur_speed: Int = 1 (значение по умолчанию)
+            var x = 0
+            var y = 0
+            ..
+            
+            fun moveTo(_toX: Int, _toY: Int)
+            {
+                x  += _toX * cur_speed
+                y += _toY * cur_speed
+                println("Human $name is moved on x + $_toX y + $_toY TO: $x, $y" z)
+            }
         }
-    }
