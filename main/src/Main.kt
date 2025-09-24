@@ -97,15 +97,13 @@ fun main() {
         1
     }
 
-    val threads = mutableListOf<Thread>()
-    for (person in objects) {
-        val thread = Thread {
+    val threads = objects.map { person ->
+        Thread {
             repeat(seconds) {
                 person.randomWalk()
                 Thread.sleep(1000)
             }
         }
-        threads.add(thread)
     }
 
     threads.forEach { it.start() }
