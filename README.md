@@ -2,7 +2,7 @@
 
 ### Структура проекта:
 
-        Kotlin-Learning/main/src/
+        Visual-Programming/main/src/
         ├── Movable.kt
         ├── Human.kt
         ├── Driver.kt
