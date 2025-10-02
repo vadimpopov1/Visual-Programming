@@ -2,91 +2,98 @@
 
 ### Структура проекта:
 
-        Visual-Programming/main/src/
-        ├── Movable.kt
-        ├── Human.kt
-        ├── Driver.kt
-        ├── Main.kt
-        └── README.md
+```
+Visual-Programming/main/src/
+├── Movable.kt
+├── Human.kt
+├── Driver.kt
+├── Main.kt
+└── README.md
+```
 
 ### Movable.kt
-Прицнип работы:
-1. Создан набор требований к классу (Класс должен реализовать функционал заложенный в интерфейс).
-   *. В функционал включено: текущая координата x; текущая координата y; скорость объекта; функция для реализации перемещения moveTo.
+**Прицнип работы:**
+1. Создан набор требований к классу (Класс должен реализовать функционал заложенный в интерфейс).    
+*. В функционал включено: текущая координата x; текущая координата y; скорость объекта; функция для реализации перемещения `moveTo`.
 
 ### Human.kt
-Принцип работы:
-1. Создается класс по конструктору, имеется функционал для выполнения "движения" человека при помощи функции RandomWalk и последующем перемещении moveTo.
+**Принцип работы:**
+1. Создается класс по конструктору, имеется функционал для выполнения "движения" человека при помощи функции `RandomWalk` и последующем перемещении `moveTo`.
 
 #### RandomWalk
-1. Начальные координаты (x,y) = (0,0)
-2. Каждую секунду человек рандомно перемещается по x на 1, 0 или -1 (вверх/остается на месте/вниз) по y на 1, 0 или -1 (вперед/остается на месте/назад)
+1. Начальные координаты `(x,y) = (0,0)`
+2. Каждую секунду человек рандомно перемещается по `x на 1, 0 или -1 (вверх/остается на месте/вниз)` по `y на 1, 0 или -1 (вперед/остается на месте/назад)`
 3. По указаному направлению он перемещается по заранее заданой скорости например если направления 1,1 и скорость 2 то он переместится по каждой коориднате на 2.
-4. В зависимости от типа объекта (Человек или Водитель), будет задано движение (RandomWalk или прямолинейное движение).
+   
+```kotlin
+class Human : Movable
+{
+    ..
+    overdrive var cur_speed: Int = 1 (значение по умолчанию)
+    overdrive var x = 0
+    overdrive var y = 0
+    ..
 
-        class Human : Movable
-        {
-            ..
-            overdrive var cur_speed: Int = 1 (значение по умолчанию)
-            overdrive var x = 0
-            overdrive var y = 0
-            ..
-
-            open fun randomWalk() {
-                val random = Random()
-                val rand_x = random.nextInt(-1, 1)
-                val rand_y = random.nextInt(-1, 1)
-                when (this) {
-                    is Driver -> straightMove()
-                    is Human -> moveTo(rand_x, rand_y)
-                }
-            }
-            
-            overdrive fun moveTo(_toX: Int, _toY: Int) {
-                x  += _toX * cur_speed
-                y += _toY * cur_speed
-                println("Human $name with speed $cur_speed moved on $_toX by x and $_toY by y. Current position: $x, $y")
-            }
+    open fun randomWalk() {
+    val random = Random()
+    val rand_x = random.nextInt(-1, 1)
+    val rand_y = random.nextInt(-1, 1)
+    when (this) {
+        is Driver -> straightMove()
+        is Human -> moveTo(rand_x, rand_y)
         }
+    }
+            
+    overdrive fun moveTo(_toX: Int, _toY: Int) {
+        x  += _toX * cur_speed
+        y += _toY * cur_speed
+        println("Human $name with speed $cur_speed moved on $_toX by x and $_toY by y. Current position: $x, $y")
+    }
+}
+```
 
 ### Driver.kt
-Принцип работы:
-1. Создается наследник класса Human по конструктору, имеется функция для прямолинейного водителя (транспорта) при помощи функции straightMove.
+**Принцип работы:**
+1. Создается наследник класса `Human` по конструктору, имеется функция для прямолинейного водителя (транспорта) при помощи функции `straightMove`.
 
 #### straightMove
-1. Начальные координаты (x,y) = (0,0)
-2. Каждую секунду водитель перемещается по x и y с заданной заранее скоростью.
+1. Начальные координаты `(x,y) = (0,0)`
+2. Каждую секунду водитель перемещается по `x` и `y` с заданной заранее скоростью.
 
-        сlass Dirver(...) : Human(...) {
-           fun straightMove() {
-                x += cur_speed
-                y += cur_speed
-                println("Driver $name with speed $cur_speed moved. Current position: $x, $y")
-           }
-        }
+```kotlin
+сlass Dirver(...) : Human(...) {
+    fun straightMove() {
+        x += cur_speed
+        y += cur_speed
+        println("Driver $name with speed $cur_speed moved. Current position: $x, $y")
+    }
+}
+```
 
 ### Main.kt
-Принцип работы:
-1. Имеется массив с объектами классов Human и Driver.
+**Принцип работы:**
+1. Имеется массив с объектами классов `Human` и `Driver`.
 2. Выводится описание каждого человека.
-3. С клавиатуры задается время в течении которого объекты будут совершать движение.
-   *. Реализована многопоточность благодаря которой движение объектов происходит параллельно.
+3. С клавиатуры задается время в течении которого объекты будут совершать движение.    
+*. Реализована многопоточность благодаря которой движение объектов происходит параллельно.
 
 #### Многопоточность:
 
 1. Каждый объект двигается в отдельном потоке
 2. Все перемещения синхронизированы по времени (1 шаг в секунду)
-3. Основной поток ждет завершения всех перемещений с помощью join()
+3. Основной поток ждет завершения всех перемещений с помощью `join()`
 
-            val threads = objects.map { person ->
-                Thread {
-                    repeat(seconds) {
-                        person.randomWalk()
-                        Thread.sleep(1000)
-                    }
-                }
-            }
+```kotlin
+val threads = objects.map { person ->
+    Thread {
+        repeat(seconds) {
+            person.randomWalk()
+            Thread.sleep(1000)
+        }
+    }
+}
         
-            threads.forEach { it.start() }
+threads.forEach { it.start() }
         
-            threads.forEach { it.join() }
+threads.forEach { it.join() }
+```
