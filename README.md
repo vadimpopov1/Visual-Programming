@@ -24,12 +24,12 @@
 3. По указаному направлению он перемещается по заранее заданой скорости например если направления 1,1 и скорость 2 то он переместится по каждой коориднате на 2.
 4. В зависимости от типа объекта (Человек или Водитель), будет задано движение (RandomWalk или прямолинейное движение).
 
-        class Human
+        class Human : Movable
         {
             ..
-            var cur_speed: Int = 1 (значение по умолчанию)
-            var x = 0
-            var y = 0
+            overdrive var cur_speed: Int = 1 (значение по умолчанию)
+            overdrive var x = 0
+            overdrive var y = 0
             ..
 
             open fun randomWalk() {
@@ -42,7 +42,7 @@
                 }
             }
             
-            open fun moveTo(_toX: Int, _toY: Int) {
+            overdrive fun moveTo(_toX: Int, _toY: Int) {
                 x  += _toX * cur_speed
                 y += _toY * cur_speed
                 println("Human $name with speed $cur_speed moved on $_toX by x and $_toY by y. Current position: $x, $y")
