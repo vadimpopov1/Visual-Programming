@@ -1,3 +1,5 @@
+package Movable
+
 fun main() {
     val objects = arrayOf(
         Human("Михаил", "Федоров", "Дмитриевич", 18,1, 444),

@@ -1,3 +1,5 @@
+package Movable
+
 import java.util.Random
 
 open class Human : Movable

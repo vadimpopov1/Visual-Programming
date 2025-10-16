@@ -1,3 +1,5 @@
+package Movable
+
 interface Movable {
     var x: Int
     var y: Int
