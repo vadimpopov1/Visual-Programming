@@ -127,14 +127,15 @@ class MainActivity : AppCompatActivity() {
                     curnum += char
                 } else if (char in "+-×÷") {
                     if (curnum.isNotEmpty()) {
-                        when (curOperator) {
-                            '+' -> res += curnum.toDouble()
-                            '-' -> res -= curnum.toDouble()
-                            '×' -> res *= curnum.toDouble()
-                            '÷' -> {
-                                if (curnum.toDouble() == 0.0) throw ArithmeticException("Division by zero")
-                                res /= curnum.toDouble()
-                            }
+                        if (curOperator == '+') {
+                            res += curnum.toDouble()
+                        } else if (curOperator == '-') {
+                            res -= curnum.toDouble()
+                        } else if (curOperator == '×') {
+                            res *= curnum.toDouble()
+                        } else if (curOperator == '÷') {
+                            if (curnum.toDouble() == 0.0) throw ArithmeticException("Division by zero")
+                            res /= curnum.toDouble()
                         }
                         curnum = ""
                     }
@@ -143,14 +144,15 @@ class MainActivity : AppCompatActivity() {
             }
 
             if (curnum.isNotEmpty()) {
-                when (curOperator) {
-                    '+' -> res += curnum.toDouble()
-                    '-' -> res -= curnum.toDouble()
-                    '×' -> res *= curnum.toDouble()
-                    '÷' -> {
-                        if (curnum.toDouble() == 0.0) throw ArithmeticException("Division by zero")
-                        res /= curnum.toDouble()
-                    }
+                if (curOperator == '+') {
+                    res += curnum.toDouble()
+                } else if (curOperator == '-') {
+                    res -= curnum.toDouble()
+                } else if (curOperator == '×') {
+                    res *= curnum.toDouble()
+                } else if (curOperator == '÷') {
+                    if (curnum.toDouble() == 0.0) throw ArithmeticException("Division by zero")
+                    res /= curnum.toDouble()
                 }
             }
 
