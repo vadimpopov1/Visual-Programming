@@ -1,5 +1,6 @@
 package com.example.calculator
 
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.TextView
@@ -8,14 +9,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : AppCompatActivity() {
+class CalcActivity : AppCompatActivity() {
 
     private var currentTextOnScreen: String = "0"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_calc)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -45,7 +46,14 @@ class MainActivity : AppCompatActivity() {
         //findViewById<TextView>(R.id.button_plusminus).setOnClickListener({ invertLastNumber() })
         //findViewById<TextView>(R.id.button_percent).setOnClickListener({ TakePercent() })
         findViewById<TextView>(R.id.button_clear).setOnClickListener({ ClearScreen() })
-        findViewById<TextView>(R.id.button_equals).setOnClickListener({ Equals() })
+        findViewById<TextView>(R.id.button_calc).setOnClickListener({ Equals() })
+
+        val buttonBack = findViewById<TextView>(R.id.button_back)
+
+        buttonBack.setOnClickListener {
+            val intent = Intent(this, MainMenu::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun UpdateScreen(text: String = currentTextOnScreen)
