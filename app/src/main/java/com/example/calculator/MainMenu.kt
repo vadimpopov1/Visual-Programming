@@ -1,6 +1,7 @@
 package com.example.calculator
 
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
@@ -18,6 +19,8 @@ class MainMenu : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // запретить поворот экрана
 
         val buttonCalc = findViewById<TextView>(R.id.button_calc)
         val buttonExit = findViewById<TextView>(R.id.button_exit)
