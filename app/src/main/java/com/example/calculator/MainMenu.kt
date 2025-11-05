@@ -23,12 +23,15 @@ class MainMenu : AppCompatActivity() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT // запретить поворот экрана
 
         val buttonCalc = findViewById<TextView>(R.id.button_calc)
+        val buttonPlayer = findViewById<TextView>(R.id.button_player)
         val buttonExit = findViewById<TextView>(R.id.button_exit)
 
-
         buttonCalc.setOnClickListener {
-            val intent = Intent(this, CalcActivity::class.java)
-            startActivity(intent)
+            startActivity(Intent(this, CalcActivity::class.java))
+        }
+
+        buttonPlayer.setOnClickListener {
+            startActivity(Intent(this, AudioPlayerActivity::class.java))
         }
 
         buttonExit.setOnClickListener {
