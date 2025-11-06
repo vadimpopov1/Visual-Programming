@@ -16,7 +16,7 @@ import android.media.MediaMetadataRetriever
 
 class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var timeBar: SeekBar
-    // private lateinit var soundBar: SeekBar
+    private lateinit var soundBar: SeekBar
     private lateinit var currentTimeText: TextView
     private lateinit var totalTimeText: TextView
     private lateinit var mediaPlayer: MediaPlayer
@@ -40,7 +40,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         setContentView(R.layout.activity_audio_player)
 
         timeBar = findViewById(R.id.time_bar)
-        // soundBar = findViewById(R.id.volume_bar) - не реализовано
+        soundBar = findViewById(R.id.volume_bar)
         currentTimeText = findViewById(R.id.cur_time)
         totalTimeText = findViewById(R.id.time_of_music)
         folderButton = findViewById(R.id.button_files)
@@ -88,6 +88,18 @@ class AudioPlayerActivity : AppCompatActivity() {
         previosButton.setOnClickListener {
             switchTrack(-1)
         }
+
+        soundBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?,progress: Int,fromUser: Boolean){
+                if(fromUser){
+                    val cur = progress.toFloat()/100
+                    mediaPlayer.setVolume(cur,cur)
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
 
         timeBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
