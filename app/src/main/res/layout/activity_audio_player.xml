@@ -71,6 +71,15 @@
         app:layout_constraintStart_toStartOf="@id/preview"
         app:srcCompat="@drawable/button_music_yes" />
 
+    <ImageView
+        android:id="@+id/button_shuffle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="@id/preview"
+        app:layout_constraintTop_toBottomOf="@+id/volume_control"
+        app:srcCompat="@drawable/button_shuffle" />
+
     <TextView
         android:id="@+id/author"
         android:layout_width="0dp"

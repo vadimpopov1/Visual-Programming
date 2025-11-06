@@ -21,6 +21,7 @@ class AudioPlayerActivity : AppCompatActivity() {
     private lateinit var totalTimeText: TextView
     private lateinit var mediaPlayer: MediaPlayer
     private lateinit var folderButton: ImageView
+    private lateinit var shuffleButton: ImageView
     private lateinit var authorText: TextView
     private lateinit var trackImage: ImageView
     private lateinit var buttonPlayPause: ImageView
@@ -44,6 +45,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         currentTimeText = findViewById(R.id.cur_time)
         totalTimeText = findViewById(R.id.time_of_music)
         folderButton = findViewById(R.id.button_files)
+        shuffleButton = findViewById(R.id.button_shuffle)
         buttonPlayPause = findViewById(R.id.button_play)
         buttonFavorite = findViewById(R.id.button_like)
         buttonBackground = findViewById(R.id.button_background)
@@ -56,6 +58,15 @@ class AudioPlayerActivity : AppCompatActivity() {
 
         folderButton.setOnClickListener {
             SearchFolder()
+        }
+
+        shuffleButton.setOnClickListener {
+            if (!musicList.isEmpty()) {
+                musicList.shuffle()
+                Toast.makeText(this, "Музыкальные файлы перемешаны.", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Сначала загрузите файлы.", Toast.LENGTH_SHORT).show()
+            }
         }
 
         buttonFavorite.setOnClickListener {
