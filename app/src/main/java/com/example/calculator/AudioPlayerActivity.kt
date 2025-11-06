@@ -2,6 +2,7 @@ package com.example.calculator
 
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
@@ -55,6 +56,8 @@ class AudioPlayerActivity : AppCompatActivity() {
         trackImage = findViewById(R.id.preview)
 
         mediaPlayer = MediaPlayer()
+
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         folderButton.setOnClickListener {
             SearchFolder()
@@ -124,7 +127,6 @@ class AudioPlayerActivity : AppCompatActivity() {
         })
 
     }
-
     private val PICK_FOLDER_REQUEST_CODE = 42
 
     private fun SearchFolder() {
@@ -160,7 +162,7 @@ class AudioPlayerActivity : AppCompatActivity() {
         }
 
         if (musicList.isEmpty()) {
-            Toast.makeText(this, "В папке нет файлов", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "В папке нет файлов.", Toast.LENGTH_SHORT).show()
             return
         }
 
