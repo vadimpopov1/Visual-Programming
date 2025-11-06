@@ -136,9 +136,8 @@ class AudioPlayerActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == PICK_FOLDER_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_FOLDER_REQUEST_CODE && resultCode == RESULT_OK) {
             val uri = data?.data ?: return
-            contentResolver.takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
             LoadMusicFromFolder(uri)
         }
     }
