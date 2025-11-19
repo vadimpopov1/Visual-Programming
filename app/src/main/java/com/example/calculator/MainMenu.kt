@@ -25,6 +25,7 @@ class MainMenu : AppCompatActivity() {
         val buttonCalc = findViewById<TextView>(R.id.button_calc)
         val buttonPlayer = findViewById<TextView>(R.id.button_player)
         val buttonExit = findViewById<TextView>(R.id.button_exit)
+        val buttonLocation = findViewById<TextView>(R.id.button_location)
 
         buttonCalc.setOnClickListener {
             startActivity(Intent(this, CalcActivity::class.java))
@@ -32,6 +33,10 @@ class MainMenu : AppCompatActivity() {
 
         buttonPlayer.setOnClickListener {
             startActivity(Intent(this, AudioPlayerActivity::class.java))
+        }
+
+        buttonLocation.setOnClickListener {
+            startActivity(Intent(this, LocationActivity::class.java))
         }
 
         buttonExit.setOnClickListener {
