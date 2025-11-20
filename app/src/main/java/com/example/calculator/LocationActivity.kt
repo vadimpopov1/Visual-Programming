@@ -5,14 +5,14 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
+import android.os.Looper
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import com.google.android.gms.location.FusedLocationProviderClient
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.File
@@ -29,6 +29,9 @@ class LocationActivity : AppCompatActivity() {
     private lateinit var currentAltitude: TextView
     private lateinit var currentTime: TextView
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private lateinit var locationRequest: LocationRequest
+    private lateinit var locationCallback: LocationCallback
+    private var isCollecting = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +47,26 @@ class LocationActivity : AppCompatActivity() {
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        locationRequest = LocationRequest.create().apply {
+            interval = 5000
+            fastestInterval = 3000
+            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        }
+
+        locationCallback = object : LocationCallback() {
+            override fun onLocationResult(locationResult: LocationResult) {
+                locationResult.lastLocation?.let { location ->
+                    currentLatitude.text = "%.6f".format(location.latitude)
+                    currentLongitude.text = "%.6f".format(location.longitude)
+                    currentAltitude.text = "%.2f".format(location.altitude)
+                    currentTime.text = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+                    saveToJson(location)
+                }
+            }
+        }
+
         backButton.setOnClickListener {
+            stopCollecting()
             val intent = Intent(this, MainMenu::class.java)
             startActivity(intent)
         }
@@ -54,27 +76,69 @@ class LocationActivity : AppCompatActivity() {
         }
 
         getButton.setOnClickListener {
-            getLocation()
+            toggleLocationUpdates()
         }
     }
 
-    private fun requestLocationPermission() {
-        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),100)
+    private fun toggleLocationUpdates() {
+        if (isCollecting) {
+            stopCollecting()
+            getButton.text = "GET"
+            Toast.makeText(this, "Сбор данных остановлен", Toast.LENGTH_SHORT).show()
+        } else {
+            startCollecting()
+            getButton.text = "STOP"
+            Toast.makeText(this, "Сбор данных запущен", Toast.LENGTH_SHORT).show()
+        }
     }
 
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
+    private fun startCollecting() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestLocationPermission()
+            return
+        }
+
+        isCollecting = true
+        fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper())
+        getLocation()
+    }
+
+    private fun stopCollecting() {
+        isCollecting = false
+        fusedLocationClient.removeLocationUpdates(locationCallback)
+    }
+
+    private fun requestLocationPermission() {
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 100)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if(requestCode == 100)
-        {
+        if(requestCode == 100) {
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 Toast.makeText(applicationContext, "Разрешения получены.", Toast.LENGTH_SHORT).show()
-                getLocation()
+                if (isCollecting) {
+                    startCollecting()
+                }
             } else {
                 Toast.makeText(applicationContext, "Отказано пользователем.", Toast.LENGTH_SHORT).show()
+                stopCollecting()
+            }
+        }
+    }
+
+    private fun getLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return
+        }
+
+        fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+            location?.let {
+                currentLatitude.text = "%.6f".format(it.latitude)
+                currentLongitude.text = "%.6f".format(it.longitude)
+                currentAltitude.text = "%.2f".format(it.altitude)
+                currentTime.text = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
+                saveToJson(it)
             }
         }
     }
@@ -90,7 +154,7 @@ class LocationActivity : AppCompatActivity() {
             put("latitude", location.latitude)
             put("longitude", location.longitude)
             put("altitude", location.altitude)
-            put("time", SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(location.time)))
+            put("time", SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()))
         }
         jsonArray.put(locationObject)
         FileWriter(file).use {
@@ -98,24 +162,8 @@ class LocationActivity : AppCompatActivity() {
         }
     }
 
-    private fun getLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestLocationPermission()
-            return
-        }
-
-        fusedLocationClient.lastLocation.addOnCompleteListener(this) { task -> val location: Location?=task.result
-            if (location != null) {
-                currentLatitude.text = "${location.latitude}"
-                currentLongitude.text = "${location.longitude}"
-                currentAltitude.text = "${location.altitude}"
-                currentTime.text = "${SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(location.time))}"
-
-                saveToJson(location)
-                Toast.makeText(this, "Данные обновлены", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Местоположение не найдено", Toast.LENGTH_SHORT).show()
-            }
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        stopCollecting()
     }
 }
