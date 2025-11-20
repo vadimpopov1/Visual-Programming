@@ -48,14 +48,14 @@ class LocationActivity : AppCompatActivity() {
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         locationRequest = LocationRequest.create().apply {
-            interval = 5000
-            fastestInterval = 3000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            setInterval(5000)
+            setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
         }
 
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
-                locationResult.lastLocation?.let { location ->
+                val location = locationResult.lastLocation
+                if (location != null) {
                     currentLatitude.text = "%.6f".format(location.latitude)
                     currentLongitude.text = "%.6f".format(location.longitude)
                     currentAltitude.text = "%.2f".format(location.altitude)
@@ -133,12 +133,12 @@ class LocationActivity : AppCompatActivity() {
         }
 
         fusedLocationClient.lastLocation.addOnSuccessListener { location ->
-            location?.let {
-                currentLatitude.text = "%.6f".format(it.latitude)
-                currentLongitude.text = "%.6f".format(it.longitude)
-                currentAltitude.text = "%.2f".format(it.altitude)
+            if (location != null ){
+                currentLatitude.text = "%.6f".format(location.latitude)
+                currentLongitude.text = "%.6f".format(location.longitude)
+                currentAltitude.text = "%.2f".format(location.altitude)
                 currentTime.text = SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date())
-                saveToJson(it)
+                saveToJson(location)
             }
         }
     }
@@ -157,6 +157,7 @@ class LocationActivity : AppCompatActivity() {
             put("time", SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()))
         }
         jsonArray.put(locationObject)
+//        Toast.makeText(this, "Файл обновлен. ${filesDir}", Toast.LENGTH_SHORT).show()
         FileWriter(file).use {
             it.write(jsonArray.toString(4))
         }
