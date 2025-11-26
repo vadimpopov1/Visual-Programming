@@ -15,16 +15,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Calculator">
         <activity
-            android:name=".LocationActivity"
+            android:name=".Ui.Location.LocationActivity"
             android:exported="false" />
         <activity
-            android:name=".AudioPlayerActivity"
+            android:name=".Ui.AudioPlayer.AudioPlayerActivity"
             android:exported="false" />
         <activity
-            android:name=".CalcActivity"
+            android:name=".Ui.Calculator.CalcActivity"
             android:exported="false" />
         <activity
-            android:name=".MainMenu"
+            android:name=".Ui.Hub.MainMenu"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

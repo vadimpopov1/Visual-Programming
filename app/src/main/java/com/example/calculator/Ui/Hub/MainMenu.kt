@@ -1,4 +1,4 @@
-package com.example.calculator
+package com.example.calculator.Ui.Hub
 
 import android.content.Intent
 import android.content.pm.ActivityInfo
@@ -8,6 +8,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.calculator.Ui.AudioPlayer.AudioPlayerActivity
+import com.example.calculator.Ui.Calculator.CalcActivity
+import com.example.calculator.Ui.Location.LocationActivity
+import com.example.calculator.R
 
 class MainMenu : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
