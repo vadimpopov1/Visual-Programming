@@ -12,6 +12,7 @@ import com.example.calculator.Ui.AudioPlayer.AudioPlayerActivity
 import com.example.calculator.Ui.Calculator.CalcActivity
 import com.example.calculator.Ui.Location.LocationActivity
 import com.example.calculator.R
+import com.example.calculator.Ui.Telephony.TelephonyActivity
 
 class MainMenu : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,6 +31,7 @@ class MainMenu : AppCompatActivity() {
         val buttonPlayer = findViewById<TextView>(R.id.button_player)
         val buttonExit = findViewById<TextView>(R.id.button_exit)
         val buttonLocation = findViewById<TextView>(R.id.button_location)
+        val buttonTelephony = findViewById<TextView>(R.id.button_telephony)
 
         buttonCalc.setOnClickListener {
             startActivity(Intent(this, CalcActivity::class.java))
@@ -41,6 +43,10 @@ class MainMenu : AppCompatActivity() {
 
         buttonLocation.setOnClickListener {
             startActivity(Intent(this, LocationActivity::class.java))
+        }
+
+        buttonTelephony.setOnClickListener {
+            startActivity(Intent(this, TelephonyActivity::class.java))
         }
 
         buttonExit.setOnClickListener {

@@ -1,6 +1,8 @@
 package com.example.calculator.Services
 
+import android.Manifest
 import android.content.Context
+import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.*
 
 class LocationService(private val context: Context) {
@@ -15,6 +17,7 @@ class LocationService(private val context: Context) {
     private var locationCallback: LocationCallback? = null
     private var isCollecting = false
 
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     fun startLocationUpdates() {
         if (isCollecting) return
 
@@ -28,6 +31,7 @@ class LocationService(private val context: Context) {
         isCollecting = false
     }
 
+    @RequiresPermission(allOf = [Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION])
     fun getCurrentLocation() {
         fusedLocationClient.lastLocation.addOnSuccessListener { }
     }

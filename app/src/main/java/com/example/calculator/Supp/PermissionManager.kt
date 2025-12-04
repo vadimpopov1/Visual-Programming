@@ -13,7 +13,7 @@ object PermissionManager {
     }
 
     fun requestLocationPermission(activity: Activity) {
-        ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION), LOCATION_PERMISSION_REQUEST_CODE)
+        ActivityCompat.requestPermissions(activity, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION, android.Manifest.permission.ACCESS_COARSE_LOCATION, android.Manifest.permission.READ_PHONE_STATE), LOCATION_PERMISSION_REQUEST_CODE)
     }
 
     fun isPermissionGranted(grantResults: IntArray): Boolean {
