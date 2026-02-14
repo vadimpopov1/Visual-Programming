@@ -40,6 +40,21 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_network"
+        android:layout_width="77dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="120dp"
+        android:backgroundTint="#808588"
+        app:cornerRadius="85dp"
+        app:icon="@drawable/exchange"
+        app:iconGravity="textStart"
+        app:iconPadding="0dp"
+        app:iconSize="45dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/button_player"
         android:layout_width="77dp"
         android:layout_height="85dp"

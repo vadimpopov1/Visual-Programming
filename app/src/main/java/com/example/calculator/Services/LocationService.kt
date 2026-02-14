@@ -13,7 +13,6 @@ class LocationService(private val context: Context) {
         setInterval(5000)
         setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
     }
-
     private var locationCallback: LocationCallback? = null
     private var isCollecting = false
 

@@ -7,6 +7,10 @@ import android.telephony.TelephonyManager
 import com.example.calculator.supp.PermissionManager
 
 import android.os.Bundle
+import android.telephony.CellInfo
+import android.telephony.CellInfoGsm
+import android.telephony.CellInfoLte
+import android.telephony.CellInfoNr
 import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
@@ -57,7 +61,8 @@ class TelephonyActivity : AppCompatActivity() {
         }
 
         val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
-        val cellInfoList = telephonyManager.allCellInfo
+
+        val cellInfoList: List<CellInfo> = telephonyManager.allCellInfo
         cell_info.text = "$cellInfoList"
     }
 }

@@ -1,0 +1,39 @@
+package com.example.calculator.data.remote
+
+import com.example.calculator.data.LocationData
+import org.json.JSONObject
+import org.zeromq.ZMQ
+
+class LocationDataSender(private val serverAddress: String) {
+
+    private val context = ZMQ.context(1)
+    private val socket = context.socket(ZMQ.REQ)
+    private var isSending = false
+
+    init {
+        socket.connect("tcp://$serverAddress")
+        socket.setReceiveTimeOut(3000)
+    }
+
+    fun sendLocationData(locationData: LocationData): String? {
+        return try {
+            val jsonData = JSONObject().apply {
+                put("latitude", locationData.latitude)
+                put("longitude", locationData.longitude)
+                put("altitude", locationData.altitude)
+                put("timestamp", locationData.timestamp.time)
+            }.toString()
+
+            socket.send(jsonData)
+            socket.recvStr()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
+    }
+
+    fun close() {
+        socket.close()
+        context.term()
+    }
+}
