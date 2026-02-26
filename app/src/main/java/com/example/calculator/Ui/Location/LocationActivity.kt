@@ -14,6 +14,7 @@ import com.example.calculator.data.local.JsonSave
 import com.example.calculator.supp.PermissionManager
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationResult
+import java.util.Date
 
 class LocationActivity : AppCompatActivity() {
     private lateinit var backButton: ImageView
@@ -23,10 +24,16 @@ class LocationActivity : AppCompatActivity() {
     private lateinit var locationService: LocationService
     private lateinit var locationCallback: LocationCallback
     private var isCollecting = false
+    private var currentLocationData: LocationData? = null
+    private var deviceIdentifier: String? = null
+
+    val EXTRA_DEVICE_IDENTIFIER = "device_identifier"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_location)
+
+        deviceIdentifier = intent.getStringExtra(EXTRA_DEVICE_IDENTIFIER)
 
         backButton = findViewById(R.id.button_back)
         permissionButton = findViewById(R.id.button_permission)
@@ -58,7 +65,10 @@ class LocationActivity : AppCompatActivity() {
                     val locationData = LocationData(
                         latitude = location.latitude,
                         longitude = location.longitude,
-                        altitude = location.altitude
+                        altitude = location.altitude,
+                        accuracy = location.accuracy,
+                        timestamp = Date(),
+                        imei = deviceIdentifier
                     )
                     locationView.updateLocationData(
                         locationData.latitude,

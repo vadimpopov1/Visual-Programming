@@ -6,5 +6,7 @@ data class LocationData(
     val latitude: Double,
     val longitude: Double,
     val altitude: Double,
-    val timestamp: Date = Date()
+    val accuracy: Float,
+    val timestamp: Date = Date(),
+    val imei: String?
 )

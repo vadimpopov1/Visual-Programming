@@ -15,13 +15,16 @@ class LocationDataSender(private val serverAddress: String) {
         socket.setReceiveTimeOut(3000)
     }
 
-    fun sendLocationData(locationData: LocationData): String? {
+    fun sendLocationData(locationData: LocationData, deviceIdentifier: String?, cellInfoList: String?): String? {
         return try {
             val jsonData = JSONObject().apply {
                 put("latitude", locationData.latitude)
                 put("longitude", locationData.longitude)
                 put("altitude", locationData.altitude)
+                put("accuracy", locationData.accuracy)
                 put("timestamp", locationData.timestamp.time)
+                put("imei", deviceIdentifier)
+                put("cellInfoList", cellInfoList)
             }.toString()
 
             socket.send(jsonData)

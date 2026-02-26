@@ -1,10 +1,14 @@
 package com.example.calculator.Ui.ZeroMQ
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
+import android.telephony.CellInfoLte
+import android.telephony.TelephonyManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -38,6 +42,8 @@ class NetworkActivity : AppCompatActivity() {
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
     private var currentLocationData: LocationData? = null
 
+    private var deviceIdentifier: String? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_network)
@@ -50,6 +56,8 @@ class NetworkActivity : AppCompatActivity() {
 
         locationService = LocationService(this)
 
+        getDeviceIdentifier()
+
         updateButtonText()
 
         startButton.setOnClickListener {
@@ -61,11 +69,23 @@ class NetworkActivity : AppCompatActivity() {
         }
     }
 
+    private fun getDeviceIdentifier() {
+        deviceIdentifier = getAndroidId()
+    }
+
+    private fun getAndroidId(): String {
+        return try {
+            Settings.Secure.getString(contentResolver,Settings.Secure.ANDROID_ID)
+        } catch (e: Exception) {
+            "None"
+        }
+    }
+
     private fun checkPermissionsAndStart() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                 this,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_PHONE_STATE),
                 LOCATION_PERMISSION_REQUEST_CODE
             )
         } else {
@@ -135,7 +155,9 @@ class NetworkActivity : AppCompatActivity() {
                         latitude = location.latitude,
                         longitude = location.longitude,
                         altitude = location.altitude,
-                        timestamp = Date()
+                        accuracy = location.accuracy,
+                        timestamp = Date(),
+                        imei = deviceIdentifier,
                     )
                 }
             }
@@ -182,9 +204,19 @@ class NetworkActivity : AppCompatActivity() {
                         ) {
                             locationService.getCurrentLocation()
                         }
-
+                        val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                        var cellInfoList = telephonyManager.allCellInfo
+//                        if (cellInfoList != null) {
+//                            for (it in cellInfoList) {
+//                                when (it) {
+//                                    is CellInfoLte -> {
+//                                        cellInfoList = "${it.cellSignalStrength}"
+//                                    }
+//                                }
+//                            }
+//                        }
                         currentLocationData?.let { locationData ->
-                            val reply = locationDataSender.sendLocationData(locationData)
+                            val reply = locationDataSender.sendLocationData(locationData, deviceIdentifier, cellInfoList.toString())
                             if (reply != null) {
                                 counter++
                                 Handler.post {
